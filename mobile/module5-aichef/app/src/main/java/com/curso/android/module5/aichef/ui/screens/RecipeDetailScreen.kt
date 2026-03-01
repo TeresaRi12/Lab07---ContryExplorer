@@ -47,6 +47,62 @@ import com.curso.android.module5.aichef.ui.viewmodel.ChefViewModel
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 
+import com.curso.android.module5.aichef.domain.model.Recipe
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.FloatingActionButton
+import androidx.core.graphics.drawable.toBitmap
+
+import android.content.Context
+import android.graphics.*
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+
+suspend fun captureRecipeComposableAsBitmap(
+    recipe: Recipe,
+    context: Context
+): Bitmap {
+
+    val width = 1080
+    val height = 1600
+
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+
+    // Fondo blanco
+    canvas.drawColor(Color.WHITE)
+
+    val paintTitle = Paint().apply {
+        color = Color.BLACK
+        textSize = 60f
+        typeface = Typeface.DEFAULT_BOLD
+        isAntiAlias = true
+    }
+
+    // Dibujar título
+    canvas.drawText(recipe.title, 50f, 100f, paintTitle)
+
+    // Cargar imagen con Coil
+    val loader = ImageLoader(context)
+    val request = ImageRequest.Builder(context)
+        .data(recipe.generatedImageUrl)
+        .allowHardware(false)
+        .build()
+
+    val result = (loader.execute(request) as SuccessResult).drawable
+    val recipeImage = (result).toBitmap()
+
+    val scaledImage = Bitmap.createScaledBitmap(recipeImage, 980, 600, true)
+
+    canvas.drawBitmap(scaledImage, 50f, 180f, null)
+
+    return bitmap
+}
+
+
 /**
  * =============================================================================
  * RecipeDetailScreen - Pantalla de detalle de receta con imagen generada por IA
@@ -158,7 +214,26 @@ fun RecipeDetailScreen(
         }
     }
 
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
+
+        floatingActionButton = {
+            recipe?.let { r ->
+                FloatingActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            val bitmap = captureRecipeComposableAsBitmap(r, context)
+                            ShareUtils.shareBitmap(context, bitmap)
+                        }
+                    }
+                ) {
+                    Icon(Icons.Default.Share, contentDescription = "Compartir receta")
+                }
+            }
+        },
+
         topBar = {
             TopAppBar(
                 title = { Text(recipe?.title ?: "Detalle de Receta") },
