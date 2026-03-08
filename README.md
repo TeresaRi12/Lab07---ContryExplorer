@@ -1,41 +1,42 @@
 ## María Teresa Rivera López
 ## 24000579
 
+Country Explorer es una aplicación web que permite a los usuarios buscar y explorar información sobre países del mundo.
+La aplicación obtiene los datos desde la REST Countries API y muestra información como la bandera del país, su capital, 
+población, región y subregión.
+
 Lab0 Parte1-Parte2
-## Parte 1 – Creación de Spots con Cámara y GPS
-- Captura de foto con CameraX:
-  Uso de ImageCapture para tomar fotografías.
-  Almacenamiento de la imagen en almacenamiento interno.
-  Manejo granular de errores de cámara (CameraClosed, HardwareIssue, etc.).
+## Parte 1 – Sistema de búsqueda y filtros
+- Búsqueda de países
+  Los usuarios pueden escribir el nombre de un país en el buscador.
+  La aplicación realiza una petición a la API y muestra los resultados.
+- Filtro por región
+  Se agregó un menú desplegable que permite filtrar los países por región.
+  Las regiones se cargan dinámicamente a partir de los resultados obtenidos de la API.
+- Filtros combinados
+  La aplicación permite combinar filtros: búsqueda por nombre y por región
 
-- Obtención de ubicación GPS:
-  Uso de Location Services.
-  Fallback a última ubicación conocida si no hay ubicación fresca.
-  Validación de coordenadas antes de guardar.
+- Archivos modificados
+  main.ts: Implementación de la búsqueda y del filtro por región
+  Creación de la función applyFilters() para combinar filtros
+  Creación de la función populateRegions() para llenar el dropdown
 
-- Manejo granular de errores:
-  Uso de sealed classes para representar errores controlados.
-  Conversión de excepciones en resultados de negocio (CreateSpotResult).
-  Limpieza automática de archivos si ocurre un error.
+  index.html: Se agregó el selector de regiones (regionFilter)
 
-- Persistencia con Room:
-  Almacenamiento local de Spots.
+## Parte 2 – Sistema de favoritos
+- Icono de favorito
+  Cada tarjeta de país tiene un icono que permite marcar o desmarcar un país como favorito.
+  Los países favoritos se guardan en el almacenamiento del navegador usando localStorage,
+  por lo que permanecen guardados incluso después de recargar la página.
+- Filtro de favoritos
+  Se agregó un checkbox que permite mostrar únicamente los países marcados como favoritos.
+- Limpiar favoritos
+  Se agregó un botón que permite eliminar todos los países guardados como favoritos.
 
-
-## Parte 2 – liminación de Spots con Limpieza
-- Eliminación coordinada :
-  Borrado del registro en Room.
-  Eliminación del archivo de imagen asociado en almacenamiento interno.
-  Prevención de archivos huérfanos.
-
-- Reactividad automática:
-  Uso de Flow<List<SpotEntity>>.
-  El mapa se actualiza automáticamente al eliminar un Spot.
-  No se requiere refrescar manualmente.
-
-- Manejo de casos límite:
-  Eliminación segura si el archivo no existe.
-  Prevención de inconsistencias entre base de datos y almacenamiento.
+- Archivos modificados
+  utils/storage.ts: Archivo creado para manejar el almacenamiento de favoritos.
+  main.ts: Se agregó el filtro de favoritos y el botón para limpiar favoritos.
+  index.html: Checkbox Favorites Only y botón Clear Favorites
 
 Link del video: https://youtu.be/Cm5t5fOx54E
 
