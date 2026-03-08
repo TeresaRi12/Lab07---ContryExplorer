@@ -258,39 +258,35 @@ async function handleSearch(): Promise<void> {
     // Si la Promise se rechaza, el error se captura en el catch.
     // =========================================================================
     //
-    if (allCountries.length === 0) {
-      const countries = await searchCountries('');
-      allCountries = countries;
+    const countries = await searchCountries(query);
+
+    allCountries = countries;
+
+    if (regionFilter.options.length === 1) {
       populateRegions(allCountries);
+    }
+
+    applyFilters();
+    return;
+
+      } catch (error) {
+        // Determinamos el mensaje de error apropiado
+        let message = 'Error desconocido al buscar países';
+
+        if (error instanceof ApiError) {
+          message = error.message;
+        } else if (error instanceof Error) {
+          message = error.message;
+        }
+
+        render({ status: 'error', message });
+
+        // Log para debugging (en producción usaríamos un servicio de logging)
+        console.error('Error en búsqueda:', error);
+      }
     }
     //
 
-applyFilters();
-return;
-
-    const countries = await searchCountries(query);
-
-    if (countries.length === 0) {
-      render({ status: 'success', data: [] });
-    } else {
-      render({ status: 'success', data: countries });
-    }
-  } catch (error) {
-    // Determinamos el mensaje de error apropiado
-    let message = 'Error desconocido al buscar países';
-
-    if (error instanceof ApiError) {
-      message = error.message;
-    } else if (error instanceof Error) {
-      message = error.message;
-    }
-
-    render({ status: 'error', message });
-
-    // Log para debugging (en producción usaríamos un servicio de logging)
-    console.error('Error en búsqueda:', error);
-  }
-}
 
 /**
  * Maneja el click en una tarjeta de país.
