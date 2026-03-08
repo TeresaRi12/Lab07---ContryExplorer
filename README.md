@@ -38,7 +38,7 @@ Lab0 Parte1-Parte2
   main.ts: Se agregó el filtro de favoritos y el botón para limpiar favoritos.
   index.html: Checkbox Favorites Only y botón Clear Favorites
 
-Link del video: https://youtu.be/Cm5t5fOx54E
+Link del video: https://youtu.be/1ypPFWGzNjI
 
 
 Con ayuda de IA pude agilizar parte del proyecto y la documentacion, asi como comprender mejor el funcionamiento de Android, 
