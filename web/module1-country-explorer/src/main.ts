@@ -35,6 +35,8 @@ import { searchCountries, ApiError } from './services/countryApi';
 import { renderCountryList } from './components/CountryCard';
 import { openModal } from './components/CountryModal';
 import { getRequiredElement, showElement, hideElement, onDOMReady, debounce } from './utils/dom';
+//parte 2
+import { getFavorites, clearFavorites } from './utils/storage';
 
 // =============================================================================
 // ESTADO DE LA APLICACIÓN
@@ -73,6 +75,10 @@ let allCountries: Country[] = [];
 /** Región seleccionada */
 let selectedRegion = 'all';
 //
+// Parte 2
+let favoritesOnlyToggle: HTMLInputElement;
+let clearFavoritesButton: HTMLButtonElement;
+//
 
 /**
  * Inicializa las referencias a los elementos del DOM.
@@ -90,7 +96,9 @@ function initializeElements(): void {
   countriesList = getRequiredElement<HTMLElement>('#countriesList');
   //Parte 1
   regionFilter = getRequiredElement<HTMLSelectElement>('#regionFilter');
-  //
+  //Parte 2
+  favoritesOnlyToggle = getRequiredElement<HTMLInputElement>('#favoritesOnly');
+  clearFavoritesButton = getRequiredElement<HTMLButtonElement>('#clearFavorites');
 }
 
 //Parte 1
@@ -115,6 +123,12 @@ function applyFilters(): void {
   const query = searchInput.value.toLowerCase().trim();
 
   let filtered = allCountries;
+  //Parte 2
+  // filtro favoritos
+  if (favoritesOnlyToggle.checked) {
+    const favorites = getFavorites();
+    filtered = filtered.filter(country => favorites.includes(country.cca3));
+  }
 
   // filtro por región
   if (selectedRegion !== 'all') {
@@ -350,6 +364,17 @@ function setupEventListeners(): void {
     applyFilters();
   });
   //
+
+  // Parte 2
+  favoritesOnlyToggle.addEventListener('change', () => {
+    applyFilters();
+  });
+
+  // clear favorites
+  clearFavoritesButton.addEventListener('click', () => {
+    clearFavorites();
+    applyFilters();
+  });
 }
 
 /**

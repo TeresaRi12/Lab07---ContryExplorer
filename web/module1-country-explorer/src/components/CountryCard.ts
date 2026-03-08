@@ -65,7 +65,7 @@ export function createCountryCard(
         class="favorite-btn absolute top-3 left-3 text-xl"
         aria-label="Toggle favorite"
       >
-        ${isFavorite(country.cca3) ? '❤️' : '🤍'}
+        ${isFavorite(country.cca3) ? '★' : '☆'}
       </button>
       <!--  -->
 
@@ -132,7 +132,7 @@ export function createCountryCard(
 
     toggleFavorite(country.cca3);
 
-    favoriteBtn.textContent = isFavorite(country.cca3) ? '❤️' : '🤍';
+    favoriteBtn.textContent = isFavorite(country.cca3) ? '★' : '☆';
   });
 
   // =========================================================================
